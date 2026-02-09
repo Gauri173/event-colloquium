@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com">
+        </script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <title>ISTE | COLLOQUIUM</title>
+    <style>
+        :root {
+            --amber-glow: #d97706;
+            --cyber-purple: #842be2;
+        }
+        body { 
+            font-family: 'Space Grotesk', sans-serif; 
+            background-color: #050505; 
+            color: #fef3c7;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #050505 100%);
+            min-height: 100vh;
+            padding-top: 64px; /* navbar height */
+
+        }
+        .mono { font-family: 'Space Mono', monospace; }
+
+        /* Scanning Line Effect */
+        body::before {
+            content: "";
+            position: fixed; top: 0; left: 0; width: 100%; height: 2px;
+            background: rgba(217, 119, 6, 0.1);
+            z-index: 50; animation: scan 4s linear infinite; pointer-events: none;
+        }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+        /* Glitch Effect */
+        .glitch { position: relative; display: inline-block; color: white; }
+        .glitch::before, .glitch::after {
+            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        }
+        .glitch::before { left: 2px; text-shadow: -2px 0 var(--amber-glow); clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse; }
+        .glitch::after { left: -2px; text-shadow: -2px 0 var(--cyber-purple), 2px 2px var(--amber-glow); animation: glitch-anim2 1s infinite linear alternate-reverse; }
+        @keyframes glitch-anim { 0% { clip: rect(31px, 9999px, 94px, 0); } 100% { clip: rect(89px, 9999px, 98px, 0); } }
+        @keyframes glitch-anim2 { 0% { clip: rect(10px, 9999px, 85px, 0); } 100% { clip: rect(80px, 9999px, 20px, 0); } }
+
+        /* Timer Units */
+        .timer-unit {
+            background: rgba(217, 119, 6, 0.05);
+            border: 1px solid rgba(217, 119, 6, 0.1);
+            min-width: 75px;
+        }
+
+        /* Flip Card Logic */
+        .flip-card { perspective: 1000px; height: 450px; }
+        .flip-card-inner {
+            position: relative; width: 100%; height: 100%;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+        
+        .flip-card-front, .flip-card-back {
+            position: absolute; width: 100%; height: 100%;
+            -webkit-backface-visibility: hidden; backface-visibility: hidden;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+            border-radius: 4px;
+        }
+
+        .flip-card-front { 
+            background: rgba(15, 15, 15, 0.8); 
+            backdrop-filter: blur(12px); 
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        
+        .flip-card-back { 
+            transform: rotateY(180deg); 
+            background: var(--amber-glow); 
+            color: #000;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+
+        .btn-register {
+            background: #000;
+            color: var(--amber-glow);
+            transition: all 0.3s ease;
+            font-weight: 700;
+            border: 1px solid #000;
+        }
+        .btn-register:hover {
+            background: transparent;
+            color: #000;
+        }
+
+        .society-logo {
+            filter: drop-shadow(0 0 8px rgba(217, 119, 6, 0.4));
+            transition: all 0.5s ease;
+        }
+        /* ===============================
+   NAVBAR (REUSABLE COMPONENT)
+================================ */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 64px;
+  background: rgba(0, 0, 0, 0.92);
+  border-bottom: 1px solid rgba(255, 140, 26, 0.3);
+  z-index: 999;
+}
+
+.nav-inner {
+  max-width: 1200px;
+  height: 100%;
+  margin: auto;
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LOGO */
+.logo img {
+  height: 34px;
+  display: block;
+}
+
+/* LINKS */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 24px;
+}
+
+.nav-links li {
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  color: #9a9a9a;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.nav-links li:hover {
+  color: #ff8c1a;
+}
+
+/* ACTIVE PAGE */
+.nav-links li.active {
+  color: #ff8c1a;
+  font-weight: 600;
+}
+
+/* ===============================
+   MOBILE
+================================ */
+@media (max-width: 768px) {
+    body {
+    padding-top: 56px;
+  }
+}
+
+  .navbar {
+    height: 56px;
+  }
+
+  .logo img {
+    height: 26px;
+  }
+
+  .nav-links {
+    gap: 4px;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-links li {
+    padding: 12px;
+    font-size: 12px;
+  }
+
+    </style>
+</head>
+<body class="overflow-x-hidden pb-20">
+
+   <!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+
+    <!-- Logo -->
+    <a href="index.html" class="logo">
+      <img src="logo.png" alt="Logo">
+    </a>
+
+    <!-- Links -->
+    <ul class="nav-links">
+      <li>Home  <a href="https://gauri173.github.io/Colloquium-Main-website-/"> </a></li>
+      <li>Evnts</li>
+      <li>Sponsers</li>
+      <li>Team</li>
+      <li>Contact</li>
+      <li>Register</li>
+    </ul>
+
+  </div>
+</nav>
+
+    <main class="px-6 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front p-8">
+                        <div class="flex justify-between items-start">
+                            <div class="mono text-[10px] text-amber-500/70 leading-tight">
+                                VENUE: <span class="text-white">LT101</span><br>
+                                DATE: <span class="text-white">16 FEB</span><br>
+                                TIME: <span class="text-white">09:00 AM</span>
+                            </div>
+                            <span class="text-2xl mono opacity-20">01</span>
+                        </div>
+                        <div class="flex-grow flex flex-col justify-center items-center">
+                            <h3 class="mono text-4xl font-bold text-white tracking-widest uppercase">EVENT 1</h3>
+                            <div class="h-[2px] w-12 bg-amber-600 mt-4"></div>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-[10px] mono text-amber-500 animate-pulse tracking-[0.3em] uppercase">Hover for description</p>
+                        </div>
+                    </div>
+                    <div class="flip-card-back p-8">
+                        <div>
+                            <p class="mono text-[10px] font-bold border-b border-black/20 pb-2 mb-4">DATA_DECRYPTED</p>
+                            <h3 class="text-2xl font-black uppercase mb-3 leading-none">DESCRIPTION</h3>
+                            <p class="text-sm font-medium leading-relaxed">description</p>
+                        </div>
+                        <button class="btn-register w-full py-4 mono text-xs uppercase tracking-widest">Register Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front p-8">
+                        <div class="flex justify-between items-start">
+                            <div class="mono text-[10px] text-amber-500/70 leading-tight">
+                                VENUE: <span class="text-white">LT101</span><br>
+                                DATE: <span class="text-white">17 FEB</span><br>
+                                TIME: <span class="text-white">11:30 AM</span>
+                            </div>
+                            <span class="text-2xl mono opacity-20">02</span>
+                        </div>
+                        <div class="flex-grow flex flex-col justify-center items-center">
+                            <h3 class="mono text-4xl font-bold text-white tracking-widest uppercase">EVENT 2</h3>
+                            <div class="h-[2px] w-12 bg-amber-600 mt-4"></div>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-[10px] mono text-amber-500 animate-pulse tracking-[0.3em] uppercase">Hover for description</p>
+                        </div>
+                    </div>
+                    <div class="flip-card-back p-8">
+                        <div>
+                            <p class="mono text-[10px] font-bold border-b border-black/20 pb-2 mb-4">DATA_DECRYPTED</p>
+                            <h3 class="text-2xl font-black uppercase mb-3 leading-none">DESCRIPTION</h3>
+                            <p class="text-sm font-medium leading-relaxed">description</p>
+                        </div>
+                        <button class="btn-register w-full py-4 mono text-xs uppercase tracking-widest">Register Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front p-8">
+                        <div class="flex justify-between items-start">
+                            <div class="mono text-[10px] text-amber-500/70 leading-tight">
+                                VENUE: <span class="text-white">LT101</span><br>
+                                DATE: <span class="text-white">18 FEB</span><br>
+                                TIME: <span class="text-white">03:00 PM</span>
+                            </div>
+                            <span class="text-2xl mono opacity-20">03</span>
+                        </div>
+                        <div class="flex-grow flex flex-col justify-center items-center">
+                            <h3 class="mono text-4xl font-bold text-white tracking-widest uppercase">EVENT 3</h3>
+                            <div class="h-[2px] w-12 bg-amber-600 mt-4"></div>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-[10px] mono text-amber-500 animate-pulse tracking-[0.3em] uppercase">Hover for description</p>
+                        </div>
+                    </div>
+                    <div class="flip-card-back p-8">
+                        <div>
+                            <p class="mono text-[10px] font-bold border-b border-black/20 pb-2 mb-4">DATA_DECRYPTED</p>
+                            <h3 class="text-2xl font-black uppercase mb-3 leading-none">DESCRIPTION</h3>
+                            <p class="text-sm font-medium leading-relaxed">description</p>
+                        </div>
+                        <button class="btn-register w-full py-4 mono text-xs uppercase tracking-widest">Register Now</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- BUTTONS -->
+    <div class="buttons">
+      <button class="primary">Register</button>
+      <button class="secondary">About Event</button>
+    </div>
+    </main>
+</body>
+</html>
+   
+
+   
